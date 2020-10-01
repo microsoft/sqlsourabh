@@ -143,6 +143,3 @@ if (json.Length >= 1048576)
     }
 }
 ```
-
-> [!IMPORTANT]
-> This sample solution is made available under the MIT license. 
