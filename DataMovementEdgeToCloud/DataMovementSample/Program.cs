@@ -19,7 +19,7 @@ namespace DataMovementSample
             // Read Environment Variables.
 
             if (Environment.GetEnvironmentVariable("SQLConnectionString") != null)
-                SQLConnectionString = Environment.GetEnvironmentVariable("KAFKA_HOST").Trim('"');
+                SQLConnectionString = Environment.GetEnvironmentVariable("SQLConnectionString").Trim('"');
 
             if (Environment.GetEnvironmentVariable("SourceTableName") != null)
                 SourceTableName = Environment.GetEnvironmentVariable("SourceTableName").Trim('"');
