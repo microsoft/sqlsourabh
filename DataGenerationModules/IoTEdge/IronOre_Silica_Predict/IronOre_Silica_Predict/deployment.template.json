@@ -10,7 +10,7 @@
             "minDockerVersion": "v1.25",
             "loggingOptions": "",
             "registryCredentials": {
-              "sourabhacr": {
+              "RegistryName": {
                 "username": "",
                 "password": "",
                 "address": ""
