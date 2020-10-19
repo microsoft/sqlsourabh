@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "IronOreDataGenerator_Kafka": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
