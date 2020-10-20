@@ -1,11 +1,11 @@
-# Iron Ore Silica prediction with Azure SQL Edge
+# Data Streaming with Kafka in Azure SQL Edge
 
-The sample code in this repo provides a simple demostration of the T-SQL Streaming capabilities of Azure SQL Edge using Kafka as the streaming source. The main objective of the sample is to define and test the streaming pipeline from a Kafka source.
+The sample code in this repo provides a simple demostration of the Data Streaming capabilities of Azure SQL Edge using Kafka as the streaming source. The main objective of the sample is to define and test the streaming pipeline from a Kafka source.
 
 The sample code includes the following components 
 
 1. Robot and Ambient Telemetry Data Generator- The sample C# project simulates telemetry data points from an Industrial Robot and the surrounding ambient telemetry data.
-2. SQL Scripts - The sample scripts to create the database, underlying tables and the T-SQL Streaming objects for data ingestion. 
+2. SQL Scripts - The sample scripts to create the database, underlying tables and the Data Streaming objects for data ingestion. 
 4. docker-compose.yml file for deploying the various components (Kafka, Zookeeper, SQL Edge and the Data Generator module)
 
 ## Building and Publishing the Data Generator container Image

@@ -1,11 +1,11 @@
 # Iron Ore Silica prediction with Azure SQL Edge
 
-The sample code in this repo provides a simple demostration of the T-SQL Streaming and the ML inferencing capabilities of Azure SQL Edge using Kafka as the streaming source. The main objective of the sample is to predict the silica impurities (or Iron Concentration) in the output from the iron ore floatation process. 
+The sample code in this repo provides a simple demostration of the Data Streaming and the ML inferencing capabilities of Azure SQL Edge using Kafka as the streaming source. The main objective of the sample is to predict the silica impurities (or Iron Concentration) in the output from the iron ore floatation process. 
 
 The sample code includes the following components 
 
 1. Iron Ore flotation data generation module - The sample C# project simulates data points from an iron ore floatation process. The data attribute definition is inspired from the [quality-prediction-in-a-mining-process](https://www.kaggle.com/edumagalhaes/quality-prediction-in-a-mining-process) on kaggle.
-2. SQL Scripts - The sample scripts to create the database, underlying tables and the T-SQL Streaming objects for data ingestion. 
+2. SQL Scripts - The sample scripts to create the database, underlying tables and the Data Streaming objects for data ingestion. 
 3. Python Notebook - For training an ML model using Azure AutoML for predicting the percentage of silica imprurties in the output.
 4. docker-compose.yml file for deploying the various components (Kafka, Zookeeper, SQL Edge and the Data Generator module)
 
