@@ -1,0 +1,1 @@
+"C:\Program Files\Microsoft Corporation\RMLUtils\ostress.exe" -i"C:\Demos\LatencyDemo\GenerateLoad\UpdateLoad.sql" -n30 -mstress -E -S"Node1" -dTest_MemoryOptimized -o"C:\Demos\LatencyDemo\GenerateLoad\output1"

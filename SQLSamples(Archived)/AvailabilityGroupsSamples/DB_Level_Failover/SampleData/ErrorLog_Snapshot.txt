@@ -1,0 +1,12 @@
+2017-10-24 03:53:07.40 spid2s      Error: 17053, Severity: 16, State: 1.
+2017-10-24 03:53:07.40 spid2s      SQLServerLogMgr::LogWriter: Operating system error 21(The device is not ready.) encountered.
+2017-10-24 03:53:07.40 spid2s      Write error during log flush.
+2017-10-24 03:53:07.40 spid66      Error: 9001, Severity: 21, State: 4.
+2017-10-24 03:53:07.40 spid66      The log for database 'DBLevelFailover' is not available. Check the operating system error log for related error messages. Resolve any errors and restart the database.
+2017-10-24 03:53:07.40 spid66      Error: 41653, Severity: 21, State: 1.
+2017-10-24 03:53:07.40 spid66      Database 'DBLevelFailover' encountered an error (error type: 2 'DB_SHUTDOWN') causing failure of the availability group 'DBLevelHeathCheck'.  Refer to the SQL Server error log for information about the errors that were encountered.  If this condition persists, contact the system administrator.
+2017-10-24 03:53:07.40 spid66      State information for database 'DBLevelFailover' - Hardened Lsn: '(36:3152:1)'    Commit LSN: '(36:2152:4)'    Commit Time: 'Oct 24 2017  3:15AM'
+2017-10-24 03:53:07.40 spid66      Database DBLevelFailover was shutdown due to error 9001 in routine 'XdesRMFull::CommitInternal'. Restart for non-snapshot databases will be attempted after all connections to the database are aborted.
+2017-10-24 03:53:07.40 spid30s     Always On Availability Groups connection with secondary database terminated for primary database 'DBLevelFailover' on the availability replica 'Node7' with Replica ID: {eeba935d-baa2-4544-b565-785051bd93d1}. This is an informational message only. No user action is required.
+2017-10-24 03:53:07.40 spid63s     State information for database 'DBLevelFailover' - Hardened Lsn: '(36:3152:1)'    Commit LSN: '(36:2152:4)'    Commit Time: 'Oct 24 2017  3:15AM'
+2017-10-24 03:53:07.41 spid66      Always On: The local replica of availability group 'DBLevelHeathCheck' is preparing to transition to the resolving role. This is an informational message only. No user action is required.

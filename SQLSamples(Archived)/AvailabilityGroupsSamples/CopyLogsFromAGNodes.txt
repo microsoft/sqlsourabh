@@ -1,0 +1,232 @@
+﻿<#
+.SYNOPSIS
+PowerShell Script to copy log files from AG nodes to the Shared Location.
+Log File Copied
+    System and Application event logs
+    Cluster Logs
+    SQL Server Error logs
+    System Health Extended Event logs
+    Always On Health Extended Event Logs.
+
+.DESCRIPTION
+The Script takes the following Parameters
+1. Shared Location for Files - This is a mandatory parameter
+2. Number of Instances - Number of instances to collect data from. This is a mandatory Parameter
+3. UserName - Windows User whose credentials would be used to copy files. This account needs to be an admin on all the Nodes. 
+    This is an optional paramter. If this is not provided, we use the current windows account.
+
+.EXAMPLE
+
+.\CopyLogsFromAGNodes.ps1 -SharedLocation "Location for dumping Log files" -NumberOfInstances "Integer Count of number of Instances to collect data from" 
+
+.\CopyLogsFromAGNodes.ps1 -SharedLocation "C:\WorkingDirectory" -NumberOfInstances 3
+
+.\CopyLogsFromAGNodes.ps1 -SharedLocation "\\CentralServer\WorkingDirectory" -NumberOfInstances 4
+
+.\CopyLogsFromAGNodes.ps1 -SharedLocation "C:\WorkingDirectory" -NumberOfInstances 3 -UserName "contoso\sqluser"
+
+#>
+
+### Paramter Definition.
+
+Param(
+   [Parameter(Mandatory=$True,Position=1)]
+   [string]$ShareLocation,
+	
+   [Parameter(Mandatory=$True)]
+   [int]$NumberOfInstances,
+
+   [Parameter(Mandatory=$false)]
+   [string]$Username
+)
+
+
+#/function CheckPermissions($UserName, $Folderlocation)
+#{
+#   Get-Item $Folderlocation | Get-EffectiveAccess -Principal $UserName
+#    (Get-Acl $FolderLocation).Access | ?{$_.IdentityReference -match $Username} Select IdentifyReference, FileSystemRights
+#
+#   (Get-Acl $FolderLocation).Access | Select IdentityReference, FileSystemRights
+#
+#}
+
+function CreateLogDirectory($fullpath)
+{
+   ##Create the destination folder on the shared directory.
+   Write-Host ("Creating Log Collection Directories at:- "+$fullpath)
+
+    try
+    {
+        If(![IO.Directory]::Exists($fullpath))
+        {
+            ##Create the folder
+            [IO.Directory]::CreateDirectory($fullpath)
+        }
+    }
+    catch
+    {
+        Write-Host $_.Exception.ToString() -ForegroundColor Red
+    }
+}
+
+function GetSQLErrorLogLocation($Instance)
+{
+    $logFolder = ''
+    [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | out-null
+
+    $server = new-object ("Microsoft.SqlServer.Management.Smo.Server") $Instance
+    if($server -ne $null)
+    {
+        $logFolder = "\\" + $server.ComputerNamePhysicalNetBIOS + "\" + $server.ErrorLogPath.Replace(":","$")
+        return $logFolder
+    } 
+    else
+    {
+        Write-Host "Cannot connect to the SQL Instance :- $Instance " -ForegroundColor Red
+        return ''
+    }
+}
+
+function CopyLogsFromSQLLogFolder($logFolder, $fullpath)
+{
+    $files = Get-ChildItem -Path $logFolder | Where-Object {$_.Name -like "ERRORLOG*"}
+    foreach($file in $files)
+    {
+        if($file.Length -ne 0)
+        {
+            $targetfile = $fullpath + "\" + $file.Name
+            [IO.File]::Copy($file.FullName, $targetfile, $true)
+        }
+    }
+    $files = Get-ChildItem -Path $logFolder | Where-Object {$_.Name -like "*Cluster*"}
+    foreach($file in $files)
+    {
+        if($file.Length -ne 0)
+        {
+            $targetfile = $fullpath + "\" + $file.Name
+            [IO.File]::Copy($file.FullName, $targetfile, $true)
+        }
+    }
+    $files = Get-ChildItem -Path $logFolder | Where-Object {$_.Extension -eq ".csv"}
+    foreach($file in $files)
+    {
+        if($file.Length -ne 0)
+        {
+            $targetfile = $fullpath + "\" + $file.Name
+            [IO.File]::Copy($file.FullName, $targetfile, $true)
+        }
+    }
+    $files = Get-ChildItem -Path $logFolder | Where-Object {$_.Extension -eq ".xel"}
+    foreach($file in $files)
+    {
+        if((($file.Name -like "system*.xel") -or ($file.Name -like "AlwaysOn*.xel") -or ($file.Name -like "*SQLDIAG*.xel")) -and ($file.Length -ne 0))
+        {
+            $targetfile = $fullpath + "\" + $file.Name
+            [IO.File]::Copy($file.FullName, $targetfile, $true)
+        }
+    }
+}
+
+function GenerateCluster_EventLogs($Instance,$Username,$password)
+{
+    ### Get the Windows Cluster Name for the Nodes.
+    $MachineName = $Instance.Split("\")[0]
+
+    if($MachineName -eq $env:COMPUTERNAME)
+    {
+        ### Powershell Script running locally.. No need to create a Remote PowerShell Session for this machine.
+        try
+        {
+            [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | out-null
+            $server = new-object ("Microsoft.SqlServer.Management.Smo.Server") $Instance 
+
+            if(($server.ComputerNamePhysicalNetBIOS -ne $null) -and ($server.ErrorLogPath -ne $null))
+            {
+                Get-ClusterLog -Node $server.ComputerNamePhysicalNetBIOS -Destination $server.ErrorLogPath
+
+                $SystemLogExportPath = $server.ErrorLogPath + "\System.csv"
+                $AppLogExportPath = $server.ErrorLogPath + "\Application.csv"
+
+                Get-Eventlog -ComputerName $server.ComputerNamePhysicalNetBIOS -LogName System | Export-CSV -Path $SystemLogExportPath 
+                Get-Eventlog -ComputerName $server.ComputerNamePhysicalNetBIOS -LogName Application | Export-CSV -Path $AppLogExportPath
+            }
+            else
+            {
+                Write-Host "SQL Server Service is Down or User does not have connect permissions on SQL Server Instance" -ForegroundColor Red
+            }
+        }
+        catch {Write-Host $_.Exception.ToString()}
+
+    }
+    else
+    {
+        ## Data Collection not being done on this machine. Use Remote PowerShell Session to collect the logs
+        $scriptBlock = {
+            param($Instance, $MachineName)
+            [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | out-null
+            $server = new-object ("Microsoft.SqlServer.Management.Smo.Server") $Instance
+            
+            if(($server.ComputerNamePhysicalNetBIOS -ne $null) -and ($server.ErrorLogPath -ne $null))
+            {
+                Get-ClusterLog -Node $server.ComputerNamePhysicalNetBIOS -Destination $server.ErrorLogPath
+
+                $SystemLogExportPath = $server.ErrorLogPath + "\System.csv"
+                $AppLogExportPath = $server.ErrorLogPath + "\Application.csv"
+
+                Get-Eventlog -ComputerName $server.ComputerNamePhysicalNetBIOS -LogName System | Export-CSV -Path $SystemLogExportPath 
+                Get-Eventlog -ComputerName $server.ComputerNamePhysicalNetBIOS -LogName Application | Export-CSV -Path $AppLogExportPath
+            }
+        }
+        try
+        {
+            ##[System.Reflection.Assembly]::LoadWithPartialName("System.Management.Automation") | out-null
+            $RemotePoShCred = New-Object System.Management.Automation.PSCredential($Username,$password)
+            $session = New-PSSession -ComputerName $MachineName -Authentication Kerberos -Credential $RemotePoShCred -SessionOption (new-pssessionoption -skipcacheck -skipcncheck)
+            Invoke-Command -Session $session -ScriptBlock $scriptBlock -ArgumentList $Instance, $MachineName
+        }
+        catch
+        {Write-Host $_.Exception.ToString() -ForegroundColor Red }
+    }
+}
+
+
+$nodes = Read-Host -Prompt "Enter Instance names seperated by Comma "
+$nodeName = $nodes.Split(',')
+$password = ''
+If($Username -eq '') 
+{
+    $Username = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    Write-Host "Using Current user $UserName credentials" -ForegroundColor Yellow
+    
+    $password = Read-Host -Prompt "Enter password For the current Windows Login" -AsSecureString
+    #CheckPermissions $FolderLocation $UserName
+
+}
+else
+{
+    $password = Read-Host -Prompt "Enter password for the User $Username " -AsSecureString 
+    ## Check if the User has permissions on the folder or not. 
+    #CheckPermissions $FolderLocation $UserName
+}
+
+## Load Required Assembly for the PowerShell script.
+[System.Reflection.Assembly]::LoadWithPartialName("System.Management.Automation")
+
+foreach($node in $nodeName)
+{
+    Write-Host "Collecting Logs for Instance :- " $node -ForegroundColor Yellow
+    $fullpath = $FolderLocation +"\" +  $node.Replace("\","_").ToString()
+    CreateLogDirectory $fullpath
+
+    ##Generate Cluster Logs and Windows Event Logs for each of the Instances.    
+    GenerateCluster_EventLogs $node $Username $password
+
+    ## Get $path for the SQL Error Log. This path would be used to copy over the files from the Log Folder.
+    $logFolder = GetSQLErrorLogLocation $node
+    if($logFolder -ne '')
+    {
+        CopyLogsFromSQLLogFolder $logFolder $fullpath
+    }
+    
+
+}

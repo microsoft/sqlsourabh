@@ -1,0 +1,13 @@
+ :Connect WindowsNod4
+ 
+ ALTER AVAILABILITY GROUP ClusterLessAg JOIN With (Cluster_Type = NONE)
+ GO  
+ ALTER AVAILABILITY GROUP ClusterLessAg GRANT CREATE ANY DATABASE
+ GO
+
+  :Connect WindowsNod5
+ 
+ ALTER AVAILABILITY GROUP ClusterLessAg JOIN With (Cluster_Type = NONE)
+ GO  
+ ALTER AVAILABILITY GROUP ClusterLessAg GRANT CREATE ANY DATABASE
+ GO

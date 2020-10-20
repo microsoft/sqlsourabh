@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<SqlWorkbenchSqlProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="SQL Server Scripts1">
+  <Items>
+    <LogicalFolder Name="Connections" Type="2" Sorted="true">
+      <Items>
+        <ConnectionNode Name="(local)\teched2014:FAREAST\harshch">
+          <Created>2014-11-03T14:20:56.4586217+05:30</Created>
+          <Type>SQL</Type>
+          <Server>(local)\teched2014</Server>
+          <UserName />
+          <Authentication>Windows Authentication</Authentication>
+          <InitialDB />
+          <LoginTimeout>15</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
+      </Items>
+    </LogicalFolder>
+    <LogicalFolder Name="Queries" Type="0" Sorted="true">
+      <Items>
+        <FileNode Name="AdditionalInformationScript.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\teched2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>(local)\teched2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>AdditionalInformationScript.sql</FullPath>
+        </FileNode>
+        <FileNode Name="BatchModeExecution.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\teched2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>(local)\teched2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>BatchModeExecution.sql</FullPath>
+        </FileNode>
+        <FileNode Name="CCI_WriteDemo.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\teched2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>(local)\teched2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>CCI_WriteDemo.sql</FullPath>
+        </FileNode>
+        <FileNode Name="Query_performance_setup_demo.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\teched2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>(local)\teched2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>Query_performance_setup_demo.sql</FullPath>
+        </FileNode>
+        <FileNode Name="QueryPerformance.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\teched2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>(local)\teched2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>QueryPerformance.sql</FullPath>
+        </FileNode>
+        <FileNode Name="SegmentElimination_BatchMode.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\teched2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>(local)\teched2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>SegmentElimination_BatchMode.sql</FullPath>
+        </FileNode>
+        <FileNode Name="SpaceSavingDemo.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\teched2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>(local)\teched2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>SpaceSavingDemo.sql</FullPath>
+        </FileNode>
+        <FileNode Name="SpaceSavingDemo.sql_Setup.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\teched2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>(local)\teched2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>SpaceSavingDemo.sql_Setup.sql</FullPath>
+        </FileNode>
+      </Items>
+    </LogicalFolder>
+    <LogicalFolder Name="Miscellaneous" Type="3" Sorted="true">
+      <Items />
+    </LogicalFolder>
+  </Items>
+</SqlWorkbenchSqlProject>

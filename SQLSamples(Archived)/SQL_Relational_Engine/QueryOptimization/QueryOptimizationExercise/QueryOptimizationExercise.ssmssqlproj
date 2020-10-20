@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<SqlWorkbenchSqlProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="QueryOptimizationExercise">
+  <Items>
+    <LogicalFolder Name="Connections" Type="2" Sorted="true">
+      <Items>
+        <ConnectionNode Name="SOURABHWIN7:FAREAST\sourabha">
+          <Created>2010-05-19T08:03:56.6862501+05:30</Created>
+          <Type>SQL</Type>
+          <Server>SOURABHWIN7</Server>
+          <UserName />
+          <Authentication>Windows Authentication</Authentication>
+          <InitialDB />
+          <LoginTimeout>15</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
+      </Items>
+    </LogicalFolder>
+    <LogicalFolder Name="Queries" Type="0" Sorted="true">
+      <Items>
+        <FileNode Name="RecompilationExercise.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>RecompilationExercise.sql</FullPath>
+        </FileNode>
+        <FileNode Name="QuerySimplification.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>QuerySimplification.sql</FullPath>
+        </FileNode>
+        <FileNode Name="AutoCreateStats.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>AutoCreateStats.sql</FullPath>
+        </FileNode>
+        <FileNode Name="LookingAtQueryStats.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>LookingAtQueryStats.sql</FullPath>
+        </FileNode>
+        <FileNode Name="Aggregations.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>Aggregations.sql</FullPath>
+        </FileNode>
+        <FileNode Name="JoinTypes.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>JoinTypes.sql</FullPath>
+        </FileNode>
+        <FileNode Name="PartialAggregates.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>PartialAggregates.sql</FullPath>
+        </FileNode>
+        <FileNode Name="Optimize For.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>Optimize For.sql</FullPath>
+        </FileNode>
+        <FileNode Name="PlanGuide.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>PlanGuide.sql</FullPath>
+        </FileNode>
+        <FileNode Name="Seek and Scan.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>Seek and Scan.sql</FullPath>
+        </FileNode>
+        <FileNode Name="XMLPLANDemo.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>XMLPLANDemo.sql</FullPath>
+        </FileNode>
+        <FileNode Name="TrivialPlan.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:SOURABHWIN7:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>SOURABHWIN7</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>TrivialPlan.sql</FullPath>
+        </FileNode>
+      </Items>
+    </LogicalFolder>
+    <LogicalFolder Name="Miscellaneous" Type="3" Sorted="true">
+      <Items />
+    </LogicalFolder>
+  </Items>
+</SqlWorkbenchSqlProject>

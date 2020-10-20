@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewSetting xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <columnSettings>
+    <ColumnSetting name="name">
+      <width>292</width>
+      <mergedColumns />
+    </ColumnSetting>
+    <ColumnSetting name="timestamp">
+      <width>184</width>
+      <mergedColumns />
+    </ColumnSetting>
+    <ColumnSetting name="database_id">
+      <width>83</width>
+      <mergedColumns />
+    </ColumnSetting>
+    <ColumnSetting name="internal_state_desc">
+      <width>154</width>
+      <mergedColumns />
+    </ColumnSetting>
+    <ColumnSetting name="remote_machine_name">
+      <width>100</width>
+      <mergedColumns />
+    </ColumnSetting>
+    <ColumnSetting name="seeding_start_time">
+      <width>100</width>
+      <mergedColumns />
+    </ColumnSetting>
+    <ColumnSetting name="seeding_end_time">
+      <width>100</width>
+      <mergedColumns />
+    </ColumnSetting>
+    <ColumnSetting name="transferred_size_bytes">
+      <width>137</width>
+      <mergedColumns />
+    </ColumnSetting>
+    <ColumnSetting name="transfer_rate_bytes_per_second">
+      <width>100</width>
+      <mergedColumns />
+    </ColumnSetting>
+    <ColumnSetting name="database_size_bytes">
+      <width>100</width>
+      <mergedColumns />
+    </ColumnSetting>
+  </columnSettings>
+</ViewSetting>

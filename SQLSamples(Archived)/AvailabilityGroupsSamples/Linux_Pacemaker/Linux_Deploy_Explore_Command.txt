@@ -1,0 +1,138 @@
+One of the key focus areas for us over the last couple of years has been to provide a choice of platform to run your favourite database engine. With that vision in mind, towards the end of last year we released SQL Server on Linux with the ability to run SQL Server on traditional bare metal/virtualized environments and also modern containerized environments. The two demos I have focusses on the ease of deployment on these platfrom, while at the time provide the same feature sets as SQL Server on Windows. 
+
+> Run the Demo around SQL On Linux -- Here I am focusing on how quickly a SQL Server on Linux environment can be made avilable for testing/production. 
+
+> Run the Demo on HA on Kubernetes -- Here I am focusing how SQL Server can run on a containerized environment with enterprise class HA. 
+
+
+Rohan Key Note Steps 
+=======================
+Deploy and Explore SQL Server 
+++++++++++++++++++++++++++++++++++
+Pre Tasks - 
+Ensure RHEL subscription is set
+Download SQL Server RPM
+Download SQL Server Tools RPM
+Download SQL Server MSSQL-CLI RPM
+
+-- Explore the Process Details 
+	sudo dmidecode -t 1
+
+--Installation
+	cd /LinuxRPMS/
+	sudo yum localinstall mssql-server-14.0.3030.27-1.x86_64.rpm
+	
+	systemctl stop mssql-server
+	sudo /opt/mssql/bin/mssql-conf setup
+	
+	sudo firewall-cmd --zone=public --add-port=1433/tcp --permanent	
+	sudo firewall-cmd --reload
+
+--Explore the Instance 
+	sudo systemctl status mssql-server -- Check the status of the mssql-service
+	sudo systemctl stop mssql-server
+	sudo systemctl start mssql-server
+	
+	
+-- Enable a traceflag in SQL 
+	sudo /opt/mssql/bin/mssql-conf traceflag 1222 on	
+	sudo /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
+	sudo /opt/mssql/bin/mssql-conf set memory.memorylimitmb 3000
+
+	systemctl restart mssql-server
+	cat /var/opt/mssql/log/errorlog
+
+-- Install MSSQL-CLI 
+	sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+	curl https://packages.microsoft.com/config/rhel/7/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo
+	sudo yum install -y mssql-cli
+	mssql-cli -Usa -Slocalhost
+
+
+Install SQL Server on Containers with HA in Kubernetes Cluster. 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Pre Setup Command Prompt
+	1. Az Login
+	2. az account set --subscription "TigerPMDemos"
+	3. az aks create  --resource-group Sourabh --name Sourabhk8s --generate-ssh-keys --node-count 4--node-vm-size "Standard_D4s_v3	
+
+1. Show K8 Cluster 	
+	az aks get-credentials --resource-group=Sourabh --name=sourabhk8s
+	Kubectl get nodes
+	kubectl get all
+	
+3. Create the persistent claims
+	kubectl apply -f "C:\Important_Documents\Playing_With_Linux\K8_Sample_Files\pvc.yaml"
+	kubectl describe pvc mssql-data-3
+
+4. Create the secret keys to be used during for SQL	
+	kubectl create secret docker-registry private-registry-key --docker-username=arismsft --docker-password=M8bv55kp --docker-email="arismsft@microsoft.com" --docker-server="private-repo.microsoft.com"
+	kubectl create secret generic sql-secrets --from-literal=sapassword="!Locks123" --from-literal=masterkeypassword="!Locks123"
+	Kubectl get secrets
+5. Create Operator and SQL Server container pods
+	kubectl apply -f "C:\Important_Documents\Playing_With_Linux\K8_Sample_Files\operator.yaml"
+	kubectl apply -f "C:\Important_Documents\Playing_With_Linux\K8_Sample_Files\sqlserver.yaml"
+	Kubectl get services
+	kubectl get pods
+	
+6. Create the Load Balancer services for AG endpoints
+	kubectl apply -f "C:\Important_Documents\Playing_With_Linux\K8_Sample_Files\ag-services.yaml"
+	kubectl get services
+	
+	az aks browse --name sourabhk8 --resource-group Sourabh
+	
+7. Connect to the SQL Server Primary Replica and Secondary replicas using the LB service. 
+	Use SQL Operations Studio for this (Use External Endpoints)
+
+
+
+Sourabh/Tejas Session
+========================
+1. Az Login
+2. az account set --subscription "TigerPMDemos"
+3. az aks create  --resource-group DPSDemoGroup --name SQLOnContainers --generate-ssh-keys --node-count 3 --node-vm-size "Standard_D4s_v3
+
+az aks get-credentials --resource-group=Sourabh --name=SQLOnContainers
+kubectl get all
+kubectl create secret generic mssql --from-literal=SA_PASSWORD="!Locks123"
+
+kubectl apply -f C:\DPSDemos\storage.yaml
+
+kubectl describe pvc <PersistentVolumeClaim>
+kubectl describe pvc mssql-data
+kubectl describe pv
+
+
+kubectl apply -f C:\DPSDemos\sql_server.yaml
+kubectl get services 
+
+
+kubectl get pods
+kubectl delete pod mssql-deployment-0
+
+
+Azure SQL DB
++++++++++++++++++++++
+Pass@word1
+
+
+
+fe80::d321:e67b:2741:7acd
+
+
+
+
+--- Ensure Subscription is registered. 
+	a. $ subscription-manager register --force --username=sqlsrv-dev-msft --password=SQLS3rv3r#2017
+	b. $ subscription-manager list --all --available
+	c. Find the one that has "Red Hat Enterprise Linux High Availability (for RHEL Server)" in the "Provides" list (eg "Red Hat Enterprise Linux Developer Suite") and take its pool ID
+	d. $ subscription-manager attach --pool=poolID
+		i. Example:  subscription-manager attach --pool=8a85f9815820f5ee015821ae9d2c795f
+			     subscription-manager  attach --pool=8a85f98c63842fef01642aee73f24121
+
+	If it fails with "No subscriptions are available from the pool with ID" then try another pool.
+	e. subscription-manager repos --enable=rhel-ha-for-rhel-7-server-rpms
+	f. $ yum  groupinstall 'High Availability'
+
+Checkpoint the VM for Preperation 
+

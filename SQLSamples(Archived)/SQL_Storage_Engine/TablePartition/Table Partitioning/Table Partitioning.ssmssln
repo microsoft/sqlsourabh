@@ -1,0 +1,17 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# SQL Server Management Studio Solution File, Format Version 13.00
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "Table Partitioning", "Table Partitioning\Table Partitioning.ssmssqlproj", "{B51A9008-52EF-41D6-B1AF-8F4D4A019924}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Default|Default = Default|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B51A9008-52EF-41D6-B1AF-8F4D4A019924}.Default|Default.ActiveCfg = Default
+		{87FDE7A4-5CAC-4EE4-83AC-B88EA8153301}.Default|Default.ActiveCfg = Default
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
