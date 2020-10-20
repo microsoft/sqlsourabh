@@ -22,7 +22,6 @@ namespace IronOreSilicaPercent
             double Starch_Flow =  random.NextDouble() * (18.097433 - 0.002024) + 0.002024;
             double Amina_Flow = random.NextDouble() * (11.294761 - 8.526940) + 8.526940;
             double Ore_Pulp_pH  = random.NextDouble() * (2.987966 - 2.715038) + 2.715038;
-            double Ore_Pulp_Density = random.NextDouble() * (1.135401 - 0.991312) + 0.991312;
             double Flotation_Column_01_Air_Flow = random.NextDouble() * (9.551099 - 7.818521) + 7.818521;
             double Flotation_Column_02_Air_Flow = random.NextDouble() * (9.564830 - 7.814160) + 7.814160;
             double Flotation_Column_03_Air_Flow = random.NextDouble() * (9.488610 - 7.830299) + 7.830299; 
@@ -42,7 +41,6 @@ namespace IronOreSilicaPercent
                 cur_Starch_Flow =  Starch_Flow,
                 cur_Amina_Flow =   Amina_Flow,
                 cur_Ore_Pulp_pH  = Ore_Pulp_pH ,
-                cur_Ore_Pulp_Density = Ore_Pulp_Density,
                 cur_Flotation_Column_01_Air_Flow = Flotation_Column_01_Air_Flow,
                 cur_Flotation_Column_02_Air_Flow = Flotation_Column_02_Air_Flow,
                 cur_Flotation_Column_03_Air_Flow = Flotation_Column_03_Air_Flow, 
