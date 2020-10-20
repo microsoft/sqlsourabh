@@ -146,7 +146,7 @@ Go
 If NOT Exists (select name from sys.database_scoped_credentials where name = 'SQLCredential')
 Begin
 	CREATE DATABASE SCOPED CREDENTIAL SQLCredential
-	WITH IDENTITY = 'sa', SECRET = '!Locks123'
+	WITH IDENTITY = 'sa', SECRET = '<MySQLSAPassword>'
 End 
 Go
 
