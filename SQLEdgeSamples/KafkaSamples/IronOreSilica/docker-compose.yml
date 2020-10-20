@@ -1,0 +1,64 @@
+version: '3'
+services:
+ zookeeper:
+    image: zookeeper:latest
+    hostname: zookeeper
+    restart: always
+    ports:
+      - "2181:2181"
+    environment:
+        ZOO_MY_ID: 1
+        ZOO_PORT: 2181
+    volumes:
+      - ./data/zookeeper/data:/data
+      - ./data/zookeeper/datalog:/datalog
+ kafka:
+    image: wurstmeister/kafka
+    hostname: kafka
+    restart: always
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: ""
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+      KAFKA_MESSAGE_TIMESTAMP_TYPE: LogAppendTime
+      KAFKA_LOG_MESSAGE_TIMESTAMP_TYPE: LogAppendTime
+    volumes:
+      - ./data/kafka2/data:/var/lib/kafka/data
+    depends_on:
+      - zookeeper
+ sql:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    hostname: sqledge
+    restart: always
+    ports:
+      - "1600:1433"
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      MSSQL_PID: "Developer"
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "MyStr0ngPassword"
+      MSSQL_AGENT_ENABLED: "TRUE"
+      MSSQL_COLLATION: "SQL_Latin1_General_CP1_CI_AS"
+      MSSQL_LCID: "1033"
+    volumes:
+      - sqldata:/var/opt/mssql
+ ironoredatagen:
+    image: <<Image URL for the data generator module>>
+    hostname: ironoredatagen
+    restart: always
+    environment:
+      THREAD_COUNT: 10
+      MESSAGE_INTERVAL: 2000
+      MESSAGE_PER_THREAD: 200
+      KAFKA_HOST: ""
+      KAFKA_TOPIC: "IronOrePredictionData"
+      PARTITIONS_PER_TOPIC: 10
+    depends_on:
+      - kafka
+volumes:
+  sqldata:
+

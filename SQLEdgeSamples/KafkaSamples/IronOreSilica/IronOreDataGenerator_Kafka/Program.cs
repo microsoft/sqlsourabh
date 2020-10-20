@@ -16,7 +16,7 @@ namespace IronOreDataGenerator_Kafka
             int messageperthread = 100;
             int partitions_per_topic = 10;
             string kafkaTopicName = "IronOrePredictionData";
-            string kafkaHostString = "40.83.17.22:9092";
+            string kafkaHostString = ""; // IP Address and port number of the Kafka Server (format - IP:Port)
             
             if (Environment.GetEnvironmentVariable("KAFKA_HOST") != null)
                 kafkaHostString = Environment.GetEnvironmentVariable("KAFKA_HOST").Trim('"');
