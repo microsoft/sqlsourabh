@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RobotTelemetryKafka": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
