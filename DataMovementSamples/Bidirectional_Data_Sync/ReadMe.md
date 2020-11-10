@@ -1,4 +1,4 @@
-# Bidirectional Data Movement - Azure SQL Edge and Azure SQL Database.
+# Bidirectional Data Movement - SQL Edge and SQL Database.
 
 The sample solution in this folder illustrates bidirectional data movement between Azure SQL and Azure SQL Edge. This sample code can be used in scenarions where the exisiting mechanisms like (Azure SQL Data Sync, Azure Data Factory or SQL Replication) cannot be used. The existing mechanims as mentioned above are optimized for this sort of data movement and offer the best out-of-box experience.
 
