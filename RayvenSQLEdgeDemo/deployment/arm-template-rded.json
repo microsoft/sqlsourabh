@@ -1,0 +1,266 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "type": "string",
+      "defaultValue": "[substring(uniqueString(resourceGroup().id), 0, 6)]"
+    }
+  },
+  "variables": {
+    "iotHub": {
+      "name": "[concat(parameters('environment'), 'dbedgehub')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', concat(parameters('environment'), 'dbedgehub'))]"
+    },
+    "registry": {
+      "name": "[concat(parameters('environment'), 'registry')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', concat(parameters('environment'), 'registry'))]",
+      "vault": {
+        "name": "[concat(parameters('environment'), 'vault')]",
+        "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', concat(parameters('environment'), 'vault'))]"
+      }
+    },
+    "storage": {
+      "name": "[concat(parameters('environment'), 'storage')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', concat(parameters('environment'), 'storage'))]"
+    },
+    "ml": {
+      "name": "[concat(parameters('environment'), 'ml')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', concat(parameters('environment'), 'ml'))]"
+    },
+    "insights": {
+      "component": {
+        "name": "[concat(parameters('environment'), 'insightscomp')]",
+        "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', concat(parameters('environment'), 'insightscomp'))]"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2019-12-01-preview",
+      "name": "[variables('registry').name]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Basic",
+        "tier": "Basic"
+      },
+      "properties": {
+        "adminUserEnabled": true,
+        "policies": {
+          "quarantinePolicy": {
+            "status": "disabled"
+          },
+          "trustPolicy": {
+            "type": "Notary",
+            "status": "disabled"
+          },
+          "retentionPolicy": {
+            "days": 7,
+            "status": "disabled"
+          }
+        },
+        "encryption": {
+          "status": "disabled"
+        },
+        "dataEndpointEnabled": false
+      }
+    },
+    {
+      "type": "microsoft.insights/components",
+      "apiVersion": "2015-05-01",
+      "name": "[variables('insights').component.name]",
+      "location": "[resourceGroup().location]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-06-01",
+      "name": "[variables('storage').name]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": false,
+        "encryption": {
+          "services": {
+            "file": {
+              "keyType": "Account",
+              "enabled": true
+            },
+            "blob": {
+              "keyType": "Account",
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(variables('storage').name, '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+      ],
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "properties": {
+        "cors": {
+          "corsRules": []
+        },
+        "deleteRetentionPolicy": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/fileServices",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(variables('storage').name, '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+      ],
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "properties": {
+        "cors": {
+          "corsRules": []
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(variables('storage').name, '/default/files')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storage').name, 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+      ],
+      "properties": {
+        "publicAccess": "None"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2018-02-14",
+      "name": "[variables('registry').vault.name]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "tenantId": "[subscription().tenantId]",
+        "enabledForDeployment": true,
+        "enabledForDiskEncryption": true,
+        "enabledForTemplateDeployment": true,
+        "sku": {
+          "name": "standard",
+          "family": "A"
+        },
+        "networkAcls": {
+          "defaultAction": "Allow",
+          "bypass": "AzureServices"
+        },
+        "accessPolicies": []
+      }
+    },
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces",
+      "apiVersion": "2018-11-19",
+      "name": "[variables('ml').name]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]",
+        "[resourceId('Microsoft.ContainerRegistry/registries', variables('registry').name)]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('registry').vault.name)]",
+        "[resourceId('microsoft.insights/components', variables('insights').component.name)]"
+      ],
+      "sku": {
+        "name": "Basic",
+        "tier": "Basic"
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]",
+        "containerRegistry": "[resourceId('Microsoft.ContainerRegistry/registries', variables('registry').name)]",
+        "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('registry').vault.name)]",
+        "applicationInsights": "[resourceId('microsoft.insights/components', variables('insights').component.name)]",
+        "discoveryUrl": "[concat('https://', resourceGroup().location, '.experiments.azureml.net/discovery')]"
+      }
+    },
+    {
+      "type": "Microsoft.Devices/IotHubs",
+      "apiVersion": "2019-11-04",
+      "name": "[variables('iotHub').name]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "S1",
+        "tier": "Standard",
+        "capacity": 1
+      },
+      "properties": {
+        "ipFilterRules": [],
+        "eventHubEndpoints": {
+          "events": {
+            "retentionTimeInDays": 1,
+            "partitionCount": 4
+          }
+        },
+        "routing": {
+          "endpoints": {
+            "serviceBusQueues": [],
+            "serviceBusTopics": [],
+            "eventHubs": [],
+            "storageContainers": []
+          },
+          "routes": [],
+          "fallbackRoute": {
+            "name": "$fallback",
+            "source": "DeviceMessages",
+            "condition": "true",
+            "endpointNames": [
+              "events"
+            ],
+            "isEnabled": true
+          }
+        },
+        "storageEndpoints": {},
+        "messagingEndpoints": {
+          "fileNotifications": {
+            "lockDurationAsIso8601": "PT1M",
+            "ttlAsIso8601": "PT1H",
+            "maxDeliveryCount": 10
+          }
+        },
+        "enableFileUploadNotifications": false,
+        "cloudToDevice": {
+          "maxDeliveryCount": 10,
+          "defaultTtlAsIso8601": "PT1H",
+          "feedback": {
+            "lockDurationAsIso8601": "PT1M",
+            "ttlAsIso8601": "PT1H",
+            "maxDeliveryCount": 10
+          }
+        },
+        "features": "None"
+      }
+    }
+  ]
+}

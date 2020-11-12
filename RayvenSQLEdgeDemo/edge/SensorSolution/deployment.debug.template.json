@@ -1,0 +1,104 @@
+{
+  "modulesContent": {
+      "$edgeAgent": {
+          "properties.desired": {
+              "modules": {
+                  "AzureSQLEdge": {
+                      "settings": {
+                          "image": "mcr.microsoft.com/azure-sql-edge",
+                          "createOptions": "{\"HostConfig\":{\"CapAdd\":[\"SYS_PTRACE\"],\"Binds\":[\"sqlvolume:/sqlvolume\"],\"PortBindings\":{\"1433/tcp\":[{\"HostPort\":\"31433\"}]},\"Mounts\":[{\"Type\":\"volume\",\"Source\":\"sqlvolume\",\"Target\":\"/var/opt/mssql\"}]},\"User\":\"0:0\",\"Env\":[\"MSSQL_AGENT_ENABLED=TRUE\",\"ClientTransportType=AMQP_TCP_Only\",\"PlanId=asde-developer-on-iot-edge\"]}"
+                      },
+                      "type": "docker",
+                      "version": "1.0",
+                      "env": {
+                          "ACCEPT_EULA": {
+                              "value": "Y"
+                          },
+                          "SA_PASSWORD": {
+                              "value": "Microsoft2020$"
+                          },
+                          "MSSQL_LCID": {
+                              "value": "1033"
+                          },
+                          "MSSQL_COLLATION": {
+                              "value": "SQL_Latin1_General_CP1_CI_AS"
+                          },
+                          "MSSQL_PACKAGE": {
+                              "value": "$SQL_PACKAGE"
+                          }
+                      },
+                      "status": "running",
+                      "restartPolicy": "always"
+                  },
+                  "SensorModule": {
+                    "version": "1.0",
+                    "type": "docker",
+                    "status": "running",
+                    "restartPolicy": "always",
+                    "settings": {
+                      "image": "${MODULES.SensorModule.debug}",
+                      "createOptions": {}
+                    }
+                  }
+              },
+              "runtime": {
+                  "settings": {
+                      "minDockerVersion": "v1.25",
+                      "loggingOptions": "",
+                      "registryCredentials": {
+                        "sqldbedgecr": {
+                          "username": "$CONTAINER_REGISTRY_USER_NAME",
+                          "password": "$CONTAINER_REGISTRY_PASSWORD",
+                          "address": "$CONTAINER_REGISTRY_SERVER"
+                        }
+                      }
+                  },
+                  "type": "docker"
+              },
+              "schemaVersion": "1.0",
+              "systemModules": {
+                  "edgeAgent": {
+                      "settings": {
+                          "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+                          "createOptions": ""
+                      },
+                      "type": "docker"
+                  },
+                  "edgeHub": {
+                      "settings": {
+                          "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+                          "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"443/tcp\":[{\"HostPort\":\"443\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}]}}}"
+                      },
+                      "type": "docker",
+                      "status": "running",
+                      "restartPolicy": "always"
+                  }
+              }
+          }
+      },
+      "$edgeHub": {
+          "properties.desired": {
+              "routes": {
+                "TemperatureSensors": "FROM /messages/modules/SensorModule/outputs/TemperatureSensors INTO BrokeredEndpoint(\"/modules/AzureSQLEdge/inputs/TemperatureSensors\")"
+              },
+              "schemaVersion": "1.0",
+              "storeAndForwardConfiguration": {
+                  "timeToLiveSecs": 7200
+              }
+          }
+      },
+      "SensorModule": {
+        "properties.desired": {
+          "SqlConnnectionString": "Server=tcp:AzureSQLEdge,1433;Initial Catalog=RealtimeSensorData;Persist Security Info=False;User ID=sa;Password=Microsoft2020$;MultipleActiveResultSets=False;Connection Timeout=30;",
+          "PushTimeInterval": 5000,
+          "DataGeneration": "on",
+          "RaiseTemp": "start",
+          "OnnxModelUrl": ""
+        }
+      },
+      "AzureSQLEdge": {
+          "properties.desired": {
+          }
+      }
+  }
+}

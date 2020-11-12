@@ -1,0 +1,8 @@
+ALTER DATABASE [RealtimeSensorData] SET DATA_RETENTION ON
+GO
+
+ALTER TABLE [RealtimeSensorRecord] SET (DATA_DELETION = ON (FILTER_COLUMN = [Timestamp], RETENTION_PERIOD = 1 day))
+GO
+
+ALTER TABLE [TemperatureAnomaliesData] SET (DATA_DELETION = ON (FILTER_COLUMN = [Timestamp], RETENTION_PERIOD = 1 day))
+GO
