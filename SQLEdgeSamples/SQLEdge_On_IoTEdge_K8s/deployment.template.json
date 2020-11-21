@@ -1,0 +1,130 @@
+{
+  "$schema-template": "2.0.0",
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": "",
+            "registryCredentials": {}
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "createOptions": {}
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "azureiotedge/azureiotedge-hub:latest",
+              "createOptions": {
+               "Env": [
+                 "storageFolder=/storage"
+               ],
+                "HostConfig": {
+                  "PortBindings": {
+                    "5671/tcp": [{
+                      "HostPort": "5671"
+                    }],
+                    "8883/tcp": [{
+                      "HostPort": "8883"
+                    }],
+                    "443/tcp": [{
+                      "HostPort": "443"
+                    }]
+                  }
+                },
+               "k8s-experimental": {
+                "securityContext": {
+                  "fsGroup": "10001",
+                  "runAsGroup": "1001",
+                  "runAsUser": "1000"},
+                 "volumes": [{
+                   "volume": {
+                     "name": "pvcvol",
+                     "persistentVolumeClaim": {
+                       "claimName": "edgehub"
+                     }
+                  },
+                   "volumeMounts": [{
+                     "name": "pvcvol",
+                     "mountPath": "/storage"
+                   }]
+                 }]
+               }
+              }
+            }
+          }
+        },
+        "modules": {
+          "AzureSQLEdge": {
+            "settings": {
+                "image": "mcr.microsoft.com/azure-sql-edge/developer",
+                "createOptions": {
+                  "HostConfig":{"CapAdd":["SYS_PTRACE"],"PortBindings":{"1433/tcp":[{"HostPort":"1600"}]}},
+                  "k8s-experimental": {
+                     "securityContext": {
+                       "fsGroup": "10001"},
+                      "volumes": [{
+                          "volume": {
+                          "name": "sqldata",
+                          "persistentVolumeClaim": {
+                              "claimName": "mssql-data"
+                              }
+                           },
+                            "volumeMounts": [{
+                              "name": "sqldata",
+                              "mountPath": "/var/opt/mssql"
+                            }]
+                          }]
+                        },
+                  "Env":[
+                      "MSSQL_AGENT_ENABLED=TRUE",
+                      "ClientTransportType=AMQP_TCP_Only",
+                      "PlanId=asde-developer-on-iot-edge"
+                      ]
+                  }  
+            },
+            "type": "docker",
+            "version": "1.0",
+            "env": {
+                "ACCEPT_EULA": {
+                    "value": "Y"
+                },
+                "MSSQL_SA_PASSWORD": {
+                    "value": "MyStr0ngP@$$w0rd"
+                },
+                "MSSQL_LCID": {
+                    "value": "1033"
+                },
+                "MSSQL_COLLATION": {
+                    "value": "SQL_Latin1_General_CP1_CI_AS"
+                }
+            },
+            "status": "running",
+            "restartPolicy": "always"
+        }
+
+        }
+      }
+    },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "routes": {},
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+     name: azure-disk
+provisioner: kubernetes.io/azure-disk
+parameters:
+  storageaccounttype: Standard_LRS
+  kind: managed
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+     name: azure-file
+provisioner: kubernetes.io/azure-file
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=0
+  - gid=0
+  - mfsymlinks
+  - cache=strict
+parameters:
+  skuName: Standard_LRS
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mssql-data
+  namespace: iotedge
+  annotations:
+    volume.beta.kubernetes.io/storage-class: azure-disk
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: edgehub
+  namespace: iotedge
+  annotations:
+    volume.beta.kubernetes.io/storage-class: azure-disk
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 15Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: iotedgefile
+  namespace: iotedge
+  annotations:
+    volume.beta.kubernetes.io/storage-class: azure-file
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
