@@ -20,7 +20,7 @@ The sample solution can either be executed directly from within Visual Studio or
 - When using directly from Visual Studio, make sure to update the following values in the **Program.cs** file. 
     ```csharp
     string sqlEdgeConnString = "<SQL Edge connection String>"; // Connection string for the SQL Edge Instance. 
-    string sqlDBConnString = "<Table Name>"; //Source Table Name   
+    string sqlDBConnString = "<Azure SQL Database connection String>"; // Connection string for the Azure SQL DB Instance.  
     int ReadWriteFrequency = 1; /// Read/Write interval in minutes. 
     ```
 - When using as a docker container, add an environment variable file to pass the required parameters to the sample.
@@ -87,7 +87,7 @@ Go
 
 ### Merge Statement
 
-The solution makes use the MERGE T-SQL statment to update/insert records in the SQL target table. This code is implemented as a stored procedure as described below. This SP takes the target tablename and a table values parameter Input. The table type acts as the source for the MERGE statement. **You'll need to change the SP on the source servers to match the schema of your source tables**. For more information, see [MERGE (Transact-SQL)](https://docs.microsoft.com/sql/t-sql/statements/merge-transact-sql) and [Use Table-Valued Parameters (Database Engine)](https://docs.microsoft.com/sql/relational-databases/tables/use-table-valued-parameters-database-engine).
+The solution makes use the MERGE T-SQL statment to update/insert records in the SQL target table. This code is implemented as a stored procedure as described below. This SP takes the target tablename and a table valued parameter Input (the TelemetryDataTable is defined as a Table Data Type in the databases) . The table type acts as the source for the MERGE statement. **You'll need to change the SP on the source servers to match the schema of your source tables**. For more information, see [MERGE (Transact-SQL)](https://docs.microsoft.com/sql/t-sql/statements/merge-transact-sql) and [Use Table-Valued Parameters (Database Engine)](https://docs.microsoft.com/sql/relational-databases/tables/use-table-valued-parameters-database-engine).
 
 ```sql
 Create Procedure dbo.WriteChangesToTable @tableName nvarchar(50), @tableInput TelemetryDataTable READONLY
