@@ -1,0 +1,97 @@
+{
+    "modulesContent": {
+        "$edgeAgent": {
+            "properties.desired": {
+                "modules": {
+                    "AzureSQLEdgePreview": {
+                        "settings": {
+                            "image": "mcr.microsoft.com/azure-sql-edge-premium",
+                            "createOptions": "{\"HostConfig\":{\"CapAdd\":[\"SYS_PTRACE\"],\"Binds\":[\"sqlvolume:/sqlvolume\",\"/var/blobstorage:/var/sqlbackups\"],\"PortBindings\":{\"1433/tcp\":[{\"HostPort\":\"1600\"}]},\"Mounts\":[{\"Type\":\"volume\",\"Source\":\"sqlvolume\",\"Target\":\"/var/opt/mssql\"}]},\"User\":\"0:0\",\"Env\":[\"MSSQL_AGENT_ENABLED=TRUE\",\"ClientTransportType=AMQP_TCP_Only\",\"MSSQL_PID=Premium\"]}"
+                        },
+                        "type": "docker",
+                        "version": "1.0",
+                        "env": {
+                            "ACCEPT_EULA": {
+                                "value": "Y"
+                            },
+                            "SA_PASSWORD": {
+                                "value": "!Locks123"
+                            },
+                            "MSSQL_LCID": {
+                                "value": "1033"
+                            },
+                            "MSSQL_COLLATION": {
+                                "value": "SQL_Latin1_General_CP1_CI_AS"
+                            }
+                        },
+                        "status": "running",
+                        "restartPolicy": "always"
+                    },
+                    "MachineTelemetry": {
+                        "settings": {
+                            "image": "sourabhacr.azurecr.io/telemetrydata:1.0-arm64v8",
+                            "createOptions": ""
+                        },
+                        "type": "docker",
+                        "status": "running",
+                        "restartPolicy": "always",
+                        "version": "1.0"
+                    }
+                },
+                "runtime": {
+                    "settings": {
+                        "minDockerVersion": "v1.25",
+                        "registryCredentials": {
+                            "sourabhacr": {
+                                "address": "sourabhacr.azurecr.io",
+                                "password": "/4CBEkUNrsYQNh2BmYDY6ycgqaalfhuP",
+                                "username": "sourabhacr"
+                            }
+                        }
+                    },
+                    "type": "docker"
+                },
+                "schemaVersion": "1.0",
+                "systemModules": {
+                    "edgeAgent": {
+                        "settings": {
+                            "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+                            "createOptions": ""
+                        },
+                        "type": "docker"
+                    },
+                    "edgeHub": {
+                        "settings": {
+                            "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+                            "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"443/tcp\":[{\"HostPort\":\"443\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}]}}}"
+                        },
+                        "type": "docker",
+                        "status": "running",
+                        "restartPolicy": "always"
+                    }
+                }
+            }
+        },
+        "$edgeHub": {
+            "properties.desired": {
+                "routes": {
+                    "Machine1TelemetryToSQL": "FROM /messages/modules/MachineTelemetry/outputs/Machine1 INTO BrokeredEndpoint(\"/modules/AzureSQLEdgePreview/inputs/MachineTelemetry\")",
+                    "Machine2TelemetryToSQL": "FROM /messages/modules/MachineTelemetry/outputs/Machine2 INTO BrokeredEndpoint(\"/modules/AzureSQLEdgePreview/inputs/MachineTelemetry\")",
+                    "Machine3TelemetryToSQL": "FROM /messages/modules/MachineTelemetry/outputs/Machine3 INTO BrokeredEndpoint(\"/modules/AzureSQLEdgePreview/inputs/MachineTelemetry\")",
+                    "Machine4TelemetryToSQL": "FROM /messages/modules/MachineTelemetry/outputs/Machine4 INTO BrokeredEndpoint(\"/modules/AzureSQLEdgePreview/inputs/MachineTelemetry\")",
+                    "Machine5TelemetryToSQL": "FROM /messages/modules/MachineTelemetry/outputs/Machine5 INTO BrokeredEndpoint(\"/modules/AzureSQLEdgePreview/inputs/MachineTelemetry\")"
+                },
+                "schemaVersion": "1.0",
+                "storeAndForwardConfiguration": {
+                    "timeToLiveSecs": 7200
+                }
+            }
+        },
+        "AzureSQLEdgePreview": {
+            "properties.desired": {
+                "SqlPackage": "",
+                "ASAJobInfo": "<Optional_ASA_Job_ZIP_SAS_URL>"
+            }
+        }
+    }
+}
