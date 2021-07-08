@@ -10,11 +10,6 @@
             "minDockerVersion": "v1.25",
             "loggingOptions": "",
             "registryCredentials": {
-              "sourabhacr": {
-                "username": "sourabhacr",
-                "password": "**********************",
-                "address": "sourabhacr.azurecr.io"
-              }
             }
           }
         },
